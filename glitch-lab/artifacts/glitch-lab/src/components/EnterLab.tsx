@@ -4,65 +4,86 @@ export default function EnterLab() {
   const { enterLab } = useGateway();
 
   return (
-    <section className="bg-[#050505] border-t border-[#1a1a1a] text-white px-10 md:px-20 py-32 md:py-40 relative overflow-hidden">
-      {/* Glow */}
-      <div
-        className="absolute w-[500px] h-[500px] rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(0,255,136,0.05) 0%, transparent 70%)",
-        }}
-      />
+    <section className="bg-black border-t border-[#111] text-white px-10 md:px-20 py-32 md:py-40 relative overflow-hidden">
 
-      <div className="relative z-10 max-w-3xl mx-auto">
-        <div className="font-mono-tech text-[10px] text-[#00ff88] tracking-[4px] uppercase mb-4 blink">
-          &gt; Initializing access...
+      {/* Background grid */}
+      <div className="absolute inset-0 pointer-events-none opacity-40" style={{
+        backgroundImage: `
+          linear-gradient(rgba(0,255,136,0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,255,136,0.02) 1px, transparent 1px)
+        `,
+        backgroundSize: "60px 60px",
+      }} />
+
+      {/* Center radial */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-[700px] h-[700px] rounded-full" style={{
+          background: "radial-gradient(circle, rgba(0,255,136,0.04) 0%, transparent 65%)",
+        }} />
+      </div>
+
+      {/* Corner decorations */}
+      <span className="absolute top-6 left-10 font-mono-tech text-[9px] text-[#1a1a1a] tracking-[3px]">SYS://LAB.CORE/ACCESS</span>
+      <span className="absolute bottom-6 right-10 font-mono-tech text-[9px] text-[#1a1a1a] tracking-[3px]">v2.0.0-EXPERIMENTAL</span>
+      <span className="absolute top-6 left-6 w-4 h-4 border-t border-l border-[#1a1a1a]" />
+      <span className="absolute top-6 right-6 w-4 h-4 border-t border-r border-[#1a1a1a]" />
+      <span className="absolute bottom-6 left-6 w-4 h-4 border-b border-l border-[#1a1a1a]" />
+      <span className="absolute bottom-6 right-6 w-4 h-4 border-b border-r border-[#1a1a1a]" />
+
+      <div className="relative z-10 max-w-3xl">
+
+        {/* Status */}
+        <div className="font-mono-tech text-[9px] text-[#00ff88]/60 tracking-[5px] mb-6 flex items-center gap-3">
+          <span className="blink">●</span>
+          INITIALIZING ACCESS...
         </div>
 
+        {/* Heading */}
         <h2
-          className="font-orbitron font-black tracking-[4px] text-white mb-6"
-          style={{ fontSize: "clamp(32px, 5vw, 56px)" }}
+          className="font-orbitron font-black tracking-[2px] text-white mb-4 leading-[1.05]"
+          style={{ fontSize: "clamp(36px, 5.5vw, 72px)" }}
         >
-          READY TO ENTER<br />
-          <span className="text-[#00ff88]">THE SYSTEM?</span>
+          READY TO ENTER
+        </h2>
+        <h2
+          className="font-orbitron font-black tracking-[2px] text-[#00ff88] mb-8 leading-[1.05]"
+          style={{ fontSize: "clamp(36px, 5.5vw, 72px)", textShadow: "0 0 60px rgba(0,255,136,0.2)" }}
+        >
+          THE SYSTEM?
         </h2>
 
-        <p className="text-[14px] text-[#555] mb-10 leading-[1.8] max-w-md">
-          Join the experiment. Help us break things. Build the next version of
-          the web.
+        {/* Divider */}
+        <div className="w-16 h-px bg-[#00ff88] mb-8" />
+
+        <p className="font-mono-tech text-[11px] text-[#444] mb-12 leading-[2] tracking-[0.5px] max-w-md">
+          Join the experiment. Help us break things.<br />
+          Build the next version of the web.
         </p>
 
-        <div className="flex gap-4 flex-wrap">
+        {/* CTA */}
+        <div className="flex gap-4 flex-wrap items-center">
           <button
             type="button"
             onClick={() => enterLab("/app/chainster")}
-            className="group relative font-orbitron font-bold text-[12px] tracking-[3px] px-10 py-4 bg-[#00ff88] text-black hover:bg-white transition-colors"
+            className="group relative font-orbitron font-black text-[11px] tracking-[4px] px-12 py-5 bg-[#00ff88] text-black overflow-hidden"
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 50px rgba(0,255,136,0.4)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = "none"; }}
           >
-            <span className="relative z-10">ENTER LAB</span>
-            <span
-              className="absolute inset-0 opacity-0 group-hover:opacity-60 bg-[#00ff88] blur-2xl transition-opacity pointer-events-none"
-              aria-hidden
-            />
+            <span className="relative z-10 group-hover:text-black transition-colors">ENTER LAB</span>
+            <span className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-white transition-transform duration-300 ease-out" />
           </button>
+
           <button
             type="button"
-            className="font-orbitron font-bold text-[12px] tracking-[3px] px-10 py-4 border border-[#333] text-[#666] hover:border-[#00ff88] hover:text-[#00ff88] transition-colors"
+            className="font-orbitron font-bold text-[11px] tracking-[4px] px-12 py-5 border border-[#222] text-[#444] hover:border-[#00ff88]/50 hover:text-[#00ff88] transition-all duration-300"
           >
             READ DOCS
           </button>
         </div>
 
-        <div className="font-mono-tech text-[10px] text-[#222] tracking-[3px] mt-10">
-          [ SYSTEM READY · AWAITING INPUT ]
+        <div className="font-mono-tech text-[8px] text-[#1a1a1a] tracking-[4px] mt-10">
+          [ SYSTEM READY · AWAITING INPUT · ALL NODES ACTIVE ]
         </div>
-      </div>
-
-      {/* Corner decorations */}
-      <div className="absolute top-6 right-10 font-mono-tech text-[10px] text-[#222] tracking-[3px]">
-        SYS://LAB.CORE/ACCESS
-      </div>
-      <div className="absolute bottom-6 right-10 font-mono-tech text-[10px] text-[#222] tracking-[3px]">
-        v2.0.0-EXPERIMENTAL
       </div>
     </section>
   );
