@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-// @ts-ignore
 import { createClient } from "@/lib/supabase/client";
 
 export default function AuthCallback() {
