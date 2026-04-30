@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-// @ts-ignore
 import { supabase } from "@/lib/supabase";
 import { Link } from "wouter";
 
