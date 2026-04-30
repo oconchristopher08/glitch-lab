@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import CryptoIntel from "@/components/CryptoIntel";
 
 type Message = {
   id: number;
@@ -36,6 +37,7 @@ export default function GlitchAgentPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
+  const [tab, setTab] = useState<"agent" | "intel">("agent");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Boot sequence
@@ -125,99 +127,121 @@ export default function GlitchAgentPage() {
             AGENT INTERFACE
           </div>
         </div>
-        <div className="text-right font-mono-tech text-[8px] tracking-[2px] text-[#ff00cc]/50 space-y-0.5">
-          <div className="flex items-center gap-1.5 justify-end">
-            <span
-              className="w-1.5 h-1.5 rounded-full blink"
-              style={{ background: "#ff00cc", boxShadow: "0 0 5px #ff00cc" }}
-            />
-            <span style={{ color: "#ff00cc" }}>ENTITY ACTIVE</span>
+        <div className="flex items-center gap-6">
+          {/* Tab switcher */}
+          <div className="flex items-center gap-1 border border-[#1a1a1a] rounded-sm p-0.5">
+            {(["agent", "intel"] as const).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setTab(t)}
+                className="font-mono-tech text-[9px] tracking-[2px] px-3 py-1.5 rounded-sm transition-all"
+                style={
+                  tab === t
+                    ? { background: "#ff00cc", color: "#000" }
+                    : { color: "#555" }
+                }
+              >
+                {t === "agent" ? "AGENT" : "CRYPTO INTEL"}
+              </button>
+            ))}
           </div>
-          <div className="text-[#222]">CHAOS ENGINE: IDLE</div>
-        </div>
-      </div>
-
-      {/* Chat area */}
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto px-6 py-5 space-y-4"
-      >
-        {/* Welcome message */}
-        <AgentBubble text="> 404-GLITCH ONLINE. send your signal. anything goes." />
-
-        {messages.map((msg) =>
-          msg.role === "agent" ? (
-            <AgentBubble key={msg.id} text={msg.text} />
-          ) : (
-            <UserBubble key={msg.id} text={msg.text} />
-          )
-        )}
-
-        {thinking && (
-          <div className="flex items-start gap-3">
-            <div
-              className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 blink"
-              style={{ background: "#ff00cc" }}
-            />
-            <div
-              className="font-mono-tech text-[11px] tracking-[2px] flex items-center gap-1"
-              style={{ color: "#ff00cc80" }}
-            >
-              <span className="blink">processing</span>
-              <span className="blink" style={{ animationDelay: "0.2s" }}>
-                .
-              </span>
-              <span className="blink" style={{ animationDelay: "0.4s" }}>
-                .
-              </span>
-              <span className="blink" style={{ animationDelay: "0.6s" }}>
-                .
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Input */}
-      <div className="border-t border-[#111] px-6 py-4 flex-shrink-0 bg-[#030303]">
-        <div className="flex gap-3 items-end">
-          <div className="flex-1 border border-[#1a1a1a] rounded-sm overflow-hidden focus-within:border-[#ff00cc]/40 transition-colors">
-            <div className="flex items-center px-3 pt-2 pb-0">
-              <span className="font-mono-tech text-[9px] text-[#ff00cc]/60 tracking-[2px] mr-2">
-                &gt;
-              </span>
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") sendMessage();
-                }}
-                placeholder="transmit signal..."
-                className="flex-1 bg-transparent text-white placeholder-[#333] font-mono-tech text-[12px] tracking-[1px] pb-2 focus:outline-none"
+          <div className="text-right font-mono-tech text-[8px] tracking-[2px] text-[#ff00cc]/50 space-y-0.5">
+            <div className="flex items-center gap-1.5 justify-end">
+              <span
+                className="w-1.5 h-1.5 rounded-full blink"
+                style={{ background: "#ff00cc", boxShadow: "0 0 5px #ff00cc" }}
               />
+              <span style={{ color: "#ff00cc" }}>ENTITY ACTIVE</span>
             </div>
+            <div className="text-[#222]">CHAOS ENGINE: IDLE</div>
           </div>
-          <button
-            onClick={sendMessage}
-            disabled={!input.trim() || thinking}
-            className="group relative px-5 py-3 font-orbitron font-bold text-[10px] tracking-[3px] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            style={{
-              background: "#ff00cc",
-              color: "#000",
-            }}
-          >
-            <span className="relative z-10">SEND</span>
-            <span
-              className="absolute inset-0 opacity-0 group-hover:opacity-50 blur-xl transition-opacity pointer-events-none"
-              style={{ background: "#ff00cc" }}
-            />
-          </button>
-        </div>
-        <div className="font-mono-tech text-[8px] tracking-[2px] text-[#222] mt-2">
-          PRESS ENTER TO TRANSMIT · ALL SIGNALS LOGGED
         </div>
       </div>
+
+      {/* ── CRYPTO INTEL TAB ── */}
+      {tab === "intel" && (
+        <div className="flex-1 overflow-hidden">
+          <CryptoIntel />
+        </div>
+      )}
+
+      {/* ── AGENT TAB ── */}
+      {tab === "agent" && (
+        <>
+          {/* Chat area */}
+          <div
+            ref={scrollRef}
+            className="flex-1 overflow-y-auto px-6 py-5 space-y-4"
+          >
+            <AgentBubble text="> 404-GLITCH ONLINE. send your signal. anything goes." />
+
+            {messages.map((msg) =>
+              msg.role === "agent" ? (
+                <AgentBubble key={msg.id} text={msg.text} />
+              ) : (
+                <UserBubble key={msg.id} text={msg.text} />
+              )
+            )}
+
+            {thinking && (
+              <div className="flex items-start gap-3">
+                <div
+                  className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 blink"
+                  style={{ background: "#ff00cc" }}
+                />
+                <div
+                  className="font-mono-tech text-[11px] tracking-[2px] flex items-center gap-1"
+                  style={{ color: "#ff00cc80" }}
+                >
+                  <span className="blink">processing</span>
+                  <span className="blink" style={{ animationDelay: "0.2s" }}>.</span>
+                  <span className="blink" style={{ animationDelay: "0.4s" }}>.</span>
+                  <span className="blink" style={{ animationDelay: "0.6s" }}>.</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Input */}
+          <div className="border-t border-[#111] px-6 py-4 flex-shrink-0 bg-[#030303]">
+            <div className="flex gap-3 items-end">
+              <div className="flex-1 border border-[#1a1a1a] rounded-sm overflow-hidden focus-within:border-[#ff00cc]/40 transition-colors">
+                <div className="flex items-center px-3 pt-2 pb-0">
+                  <span className="font-mono-tech text-[9px] text-[#ff00cc]/60 tracking-[2px] mr-2">
+                    &gt;
+                  </span>
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") sendMessage();
+                    }}
+                    placeholder="transmit signal..."
+                    className="flex-1 bg-transparent text-white placeholder-[#333] font-mono-tech text-[12px] tracking-[1px] pb-2 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <button
+                onClick={sendMessage}
+                disabled={!input.trim() || thinking}
+                className="group relative px-5 py-3 font-orbitron font-bold text-[10px] tracking-[3px] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                style={{ background: "#ff00cc", color: "#000" }}
+              >
+                <span className="relative z-10">SEND</span>
+                <span
+                  className="absolute inset-0 opacity-0 group-hover:opacity-50 blur-xl transition-opacity pointer-events-none"
+                  style={{ background: "#ff00cc" }}
+                />
+              </button>
+            </div>
+            <div className="font-mono-tech text-[8px] tracking-[2px] text-[#222] mt-2">
+              PRESS ENTER TO TRANSMIT · ALL SIGNALS LOGGED
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
